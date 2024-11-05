@@ -1,24 +1,10 @@
 blueprint:
-  name: ZHA - Philips Hue Dimmer Switch (Fixed)
-  description: 'Control lights with a Philips Hue Dimmer Switch.
-
-    The top "on" button will turn the lights on to the last set brightness
-
-    (unless the force brightness is toggled on in the blueprint).
-
-    Dim up/down buttons will change the brightness smoothly and can be pressed
-
-    and hold until the brightness is satisfactory.
-
-
-    The bottom "off" button will turn the lights off.
-
-    '
+  name: "ZHA - Philips Hue Dimmer Switch"
+  description: "Control a dimmable light with a Philips Hue Dimmer Switch."
   domain: automation
   input:
     remote:
-      name: Philips Hue Dimmer Switch
-      description: Pick either RWL020 (US) or RWL021 (EU)
+      name: "Philips Hue Dimmer Switch"
       selector:
         device:
           filter:
@@ -34,26 +20,7 @@ blueprint:
           entity:
             - domain:
                 - light
-    force_brightness:
-      name: Force turn on brightness
-      description:
-        'Force the brightness to the set level below, when the "on" button
-        on the remote is pushed and lights turn on.'
-      default: false
-      selector:
-        boolean: {}
-    brightness:
-      name: Brightness
-      description: Brightness of the light(s) when turning on
-      default: 100
-      selector:
-        number:
-          min: 0.0
-          max: 100.0
-          mode: slider
-          step: 1.0
-          unit_of_measurement: "%"
-  source_url: https://community.home-assistant.io/t/zha-philips-hue-dimmer-switch-rwl020-rwl021/255048
+  source_url: https://github.com/urbas/ha-philips-dimmer-switch/blob/master/ha-philips-dimmer-switch-blueprint.yaml
 mode: restart
 max_exceeded: silent
 variables:
@@ -66,59 +33,12 @@ trigger:
 action:
   - variables:
       command: "{{ trigger.event.data.command }}"
-      cluster_id: "{{ trigger.event.data.cluster_id }}"
-      endpoint_id: "{{ trigger.event.data.endpoint_id }}"
   - choose:
-      # Light on
+      # Toggle light on and off
       - conditions:
-          - "{{ command == 'on' }}"
-          - "{{ cluster_id == 6 }}"
-          - "{{ endpoint_id == 1 }}"
+          - "{{ command == 'on_short_release' }}"
         sequence:
-          - choose:
-              - conditions: "{{ force_brightness }}"
-                sequence:
-                  - service: light.turn_on
-                    target: !input light
-                    data:
-                      transition: 1
-                      brightness_pct: !input brightness
-            default:
-              - service: light.turn_on
-                target: !input light
-                data:
-                  transition: 1
-      # Light off
-      - conditions:
-          - "{{ command == 'off_press' }}"
-          - "{{ cluster_id == 64512 }}"
-          - "{{ endpoint_id == 2 }}"
-        sequence:
-          - service: light.turn_off
+          - service: light.toggle
             target: !input light
             data:
-              transition: 1
-      # Brightness up
-      - conditions:
-          - "{{ command == 'step' }}"
-          - "{{ cluster_id == 8 }}"
-          - "{{ endpoint_id == 1 }}"
-          - "{{ trigger.event.data.params.step_mode == 0 }}"
-        sequence:
-          - service: light.turn_on
-            target: !input light
-            data:
-              brightness_step_pct: 10
-              transition: 1
-      # Brightness down
-      - conditions:
-          - "{{ command == 'step' }}"
-          - "{{ cluster_id == 8 }}"
-          - "{{ endpoint_id == 1 }}"
-          - "{{ trigger.event.data.params.step_mode == 1 }}"
-        sequence:
-          - service: light.turn_on
-            target: !input light
-            data:
-              brightness_step_pct: -10
               transition: 1
