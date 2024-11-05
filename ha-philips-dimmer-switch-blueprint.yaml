@@ -1,5 +1,5 @@
 blueprint:
-  name: "Philips Hue Dimmer Switch v7"
+  name: "Philips Hue Dimmer Switch v8"
   description: "Control a dimmable light with a Philips Hue Dimmer Switch."
   domain: automation
   input:
@@ -32,13 +32,23 @@ action:
   - variables:
       command: "{{ trigger.event.data.command }}"
   - choose:
-      # Toggle light on and off
+      # Toggle on/off
       - conditions:
-          - "{{ command == 'on_short_release' }}"
+          - "{{ command == 'on_press' }}"
         sequence:
           - service: light.toggle
             target: !input light
             data: {}
+
+      # Turn on to minimum brightness
+      - conditions:
+          - "{{ command == 'on_hold' }}"
+        sequence:
+          - service: light.turn_on
+            target: !input light
+            data:
+              brightness_pct: 1
+              transition: 1
 
       # Brightness up
       - conditions:
@@ -75,21 +85,3 @@ action:
             data:
               brightness_step_pct: -5
               transition: 0
-
-      # Turn on to minimum brightness
-      - conditions:
-          - "{{ command == 'off_hold' }}"
-        sequence:
-          - service: light.turn_on
-            target: !input light
-            data:
-              brightness_pct: 1
-              transition: 1
-
-      # Turn off
-      - conditions:
-          - "{{ command == 'off_short_release' }}"
-        sequence:
-          - service: light.turn_off
-            target: !input light
-            data: {}
