@@ -1,5 +1,5 @@
 blueprint:
-  name: "Philips Hue Dimmer Switch v11"
+  name: "Philips Hue Dimmer Switch v12"
   description: "Control a dimmable light with a Philips Hue Dimmer Switch."
   domain: automation
   input:
@@ -20,6 +20,13 @@ blueprint:
           entity:
             - domain:
                 - light
+    ceiling_light:
+      name: Ceiling light
+      description: Ceiling light in the room
+      selector:
+        target:
+          entity:
+            - integration: zha
     other_lights:
       name: Other lights
       description: Other lights in the room
@@ -93,6 +100,14 @@ action:
               brightness_step_pct: -5
               transition: 0
 
+      # Toggle ceiling lights on
+      - conditions:
+          - "{{ command == 'on_double_press' }}"
+        sequence:
+          - service: homeassistant.toggle
+            target: !input ceiling_light
+            data: {}
+
       # Turn everything off
       - conditions:
           - "{{ command == 'off_press' }}"
@@ -102,4 +117,7 @@ action:
             data: {}
           - service: homeassistant.turn_off
             target: !input other_lights
+            data: {}
+          - service: homeassistant.turn_off
+            target: !input ceiling_light
             data: {}
