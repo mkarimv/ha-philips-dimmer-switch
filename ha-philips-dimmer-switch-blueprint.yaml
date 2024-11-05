@@ -1,5 +1,5 @@
 blueprint:
-  name: "Philips Hue Dimmer Switch v8"
+  name: "Philips Hue Dimmer Switch v9"
   description: "Control a dimmable light with a Philips Hue Dimmer Switch."
   domain: automation
   input:
@@ -12,14 +12,17 @@ blueprint:
               manufacturer: "Signify Netherlands B.V."
               model: "RWL022"
           multiple: false
-    light:
-      name: Light(s)
-      description: The light(s) to control
+    bedside_lamp:
+      name: Bedside Lamp
+      description: The bedside lamp to control
       selector:
         target:
           entity:
             - domain:
                 - light
+    other_lights:
+      name: Other lights
+      description: Other lights in the room
   source_url: https://github.com/urbas/ha-philips-dimmer-switch/blob/master/ha-philips-dimmer-switch-blueprint.yaml
 mode: restart
 max_exceeded: silent
@@ -37,7 +40,7 @@ action:
           - "{{ command == 'on_press' }}"
         sequence:
           - service: light.toggle
-            target: !input light
+            target: !input bedside_lamp
             data: {}
 
       # Turn on to minimum brightness
@@ -45,7 +48,7 @@ action:
           - "{{ command == 'on_hold' }}"
         sequence:
           - service: light.turn_on
-            target: !input light
+            target: !input bedside_lamp
             data:
               brightness_pct: 1
               transition: 1
@@ -55,7 +58,7 @@ action:
           - "{{ command == 'up_hold' }}"
         sequence:
           - service: light.turn_on
-            target: !input light
+            target: !input bedside_lamp
             data:
               brightness_step_pct: 20
               transition: 1
@@ -63,7 +66,7 @@ action:
           - "{{ command == 'up_short_release' }}"
         sequence:
           - service: light.turn_on
-            target: !input light
+            target: !input bedside_lamp
             data:
               brightness_step_pct: 5
               transition: 0
@@ -73,7 +76,7 @@ action:
           - "{{ command == 'down_hold' }}"
         sequence:
           - service: light.turn_on
-            target: !input light
+            target: !input bedside_lamp
             data:
               brightness_step_pct: -20
               transition: 1
@@ -81,7 +84,18 @@ action:
           - "{{ command == 'down_short_release' }}"
         sequence:
           - service: light.turn_on
-            target: !input light
+            target: !input bedside_lamp
             data:
               brightness_step_pct: -5
               transition: 0
+
+      # Turn everything off
+      - conditions:
+          - "{{ command == 'on_triple_press' }}"
+        sequence:
+          - service: homeassistant.turn_off
+            target: !input bedside_lamp
+            data: {}
+          - service: homeassistant.turn_off
+            target: !input other_lights
+            data: {}
