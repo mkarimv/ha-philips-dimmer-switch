@@ -23,12 +23,6 @@ blueprint:
         device:
           filter:
             - integration: zha
-              manufacturer: "Signify Netherlands B.V."
-          entity:
-            - domain:
-                - sensor
-              device_class:
-                - battery
           multiple: false
     light:
       name: Light(s)
