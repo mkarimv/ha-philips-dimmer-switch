@@ -1,5 +1,5 @@
 blueprint:
-  name: "Philips Hue Dimmer Switch v6"
+  name: "Philips Hue Dimmer Switch v7"
   description: "Control a dimmable light with a Philips Hue Dimmer Switch."
   domain: automation
   input:
@@ -78,7 +78,7 @@ action:
 
       # Turn on to minimum brightness
       - conditions:
-          - "{{ command == 'down_hold' }}"
+          - "{{ command == 'off_hold' }}"
         sequence:
           - service: light.turn_on
             target: !input light
