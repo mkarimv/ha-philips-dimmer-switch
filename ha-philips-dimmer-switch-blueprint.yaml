@@ -1,5 +1,5 @@
 blueprint:
-  name: "Philips Hue Dimmer Switch v5"
+  name: "Philips Hue Dimmer Switch v6"
   description: "Control a dimmable light with a Philips Hue Dimmer Switch."
   domain: automation
   input:
@@ -38,6 +38,7 @@ action:
         sequence:
           - service: light.toggle
             target: !input light
+            data: {}
 
       # Brightness up
       - conditions:
@@ -91,3 +92,4 @@ action:
         sequence:
           - service: light.turn_off
             target: !input light
+            data: {}
