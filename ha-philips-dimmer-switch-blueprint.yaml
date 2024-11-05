@@ -23,7 +23,7 @@ blueprint:
         device:
           filter:
             - integration: zha
-              manufacturer: Philips
+              manufacturer: "Signify Netherlands B.V."
           entity:
             - domain:
                 - sensor
