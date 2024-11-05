@@ -40,6 +40,7 @@ action:
       # Brightness up
       - conditions:
           - "{{ command == 'up_press' }}"
+          - "{{ command == 'up_hold' }}"
         sequence:
           - service: light.turn_on
             target: !input light
@@ -49,6 +50,7 @@ action:
       # Brightness down
       - conditions:
           - "{{ command == 'down_press' }}"
+          - "{{ command == 'down_hold' }}"
         sequence:
           - service: light.turn_on
             target: !input light
