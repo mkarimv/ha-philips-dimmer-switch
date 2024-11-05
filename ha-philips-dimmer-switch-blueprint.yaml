@@ -1,5 +1,5 @@
 blueprint:
-  name: "Philips Hue Dimmer Switch v10"
+  name: "Philips Hue Dimmer Switch v11"
   description: "Control a dimmable light with a Philips Hue Dimmer Switch."
   domain: automation
   input:
@@ -95,7 +95,7 @@ action:
 
       # Turn everything off
       - conditions:
-          - "{{ command == 'on_triple_press' }}"
+          - "{{ command == 'off_press' }}"
         sequence:
           - service: homeassistant.turn_off
             target: !input bedside_lamp
