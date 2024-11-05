@@ -1,5 +1,5 @@
 blueprint:
-  name: "Philips Hue Dimmer Switch v2"
+  name: "Philips Hue Dimmer Switch v3"
   description: "Control a dimmable light with a Philips Hue Dimmer Switch."
   domain: automation
   input:
@@ -37,21 +37,40 @@ action:
           - "{{ command == 'on_short_release' }}"
         sequence:
           - service: light.toggle
+            target: !input light
+
       # Brightness up
       - conditions:
-          - "{{ command in ['up_press', 'up_hold', 'up_short_release'] }}"
+          - "{{ command == 'up_hold' }}"
         sequence:
           - service: light.turn_on
             target: !input light
             data:
-              brightness_step_pct: 10
+              brightness_step_pct: 20
               transition: 1
+      - conditions:
+          - "{{ command == 'up_short_release' }}"
+        sequence:
+          - service: light.turn_on
+            target: !input light
+            data:
+              brightness_step_pct: 5
+              transition: 1
+
       # Brightness down
       - conditions:
-          - "{{ command in ['down_press', 'down_hold', 'down_short_release'] }}"
+          - "{{ command == 'down_hold' }}"
         sequence:
           - service: light.turn_on
             target: !input light
             data:
-              brightness_step_pct: -10
+              brightness_step_pct: -20
+              transition: 1
+      - conditions:
+          - "{{ command == 'down_short_release' }}"
+        sequence:
+          - service: light.turn_on
+            target: !input light
+            data:
+              brightness_step_pct: -5
               transition: 1
