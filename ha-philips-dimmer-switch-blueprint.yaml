@@ -38,5 +38,4 @@ action:
         sequence:
           - service: light.toggle
             target: !input light
-            data:
-              transition: 1
+            data: {}
