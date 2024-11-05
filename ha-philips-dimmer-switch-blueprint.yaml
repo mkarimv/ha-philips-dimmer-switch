@@ -23,6 +23,7 @@ blueprint:
         device:
           filter:
             - integration: zha
+              model: RWL022
           multiple: false
     light:
       name: Light(s)
