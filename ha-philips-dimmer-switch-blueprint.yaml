@@ -37,5 +37,21 @@ action:
           - "{{ command == 'on_short_release' }}"
         sequence:
           - service: light.toggle
+      # Brightness up
+      - conditions:
+          - "{{ command == 'up_press' }}"
+        sequence:
+          - service: light.turn_on
             target: !input light
-            data: {}
+            data:
+              brightness_step_pct: 10
+              transition: 1
+      # Brightness down
+      - conditions:
+          - "{{ command == 'down_press' }}"
+        sequence:
+          - service: light.turn_on
+            target: !input light
+            data:
+              brightness_step_pct: -10
+              transition: 1
