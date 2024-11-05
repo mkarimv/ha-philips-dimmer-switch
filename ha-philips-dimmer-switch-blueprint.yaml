@@ -22,8 +22,9 @@ blueprint:
       selector:
         device:
           filter:
-            - integration: zha
-              model: RWL022
+            - integration: "zha"
+              manufacturer: "Signify Netherlands B.V."
+              model: "RWL022"
           multiple: false
     light:
       name: Light(s)
