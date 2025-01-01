@@ -1,5 +1,5 @@
 blueprint:
-  name: "Philips Hue Dimmer Switch: Bedroom v13"
+  name: "Philips Hue Dimmer Switch: Bedroom v14"
   description: "Control a bedside lamp, a ceiling light, and turn off other lights in the bedroom with the Philips Hue Dimmer Switch."
   domain: automation
   input:
@@ -50,14 +50,14 @@ action:
       # bedside_lamp.device_id
       bedside_lamp: !input bedside_lamp
   - choose:
-      # Toggle on/off
+      # turn bedside lamp on
       - conditions:
           - "{{ command == 'on_press' }}"
         sequence:
-          - action: light.toggle
+          - action: light.turn_on
             target: !input bedside_lamp
 
-      # Turn on to minimum brightness
+      # turn bedside lamp on to minimum brightness
       - conditions:
           - "{{ command == 'on_hold' }}"
         sequence:
@@ -67,7 +67,7 @@ action:
               brightness_pct: 1
               transition: 1
 
-      # Brightness up
+      #  bedside lamp brightness up
       - conditions:
           - "{{ command == 'up_hold' }}"
         sequence:
@@ -85,7 +85,7 @@ action:
               brightness_step_pct: 5
               transition: 0
 
-      # Brightness down
+      # bedside lamp brightness down
       - conditions:
           - "{{ command == 'down_hold' }}"
         sequence:
@@ -103,24 +103,27 @@ action:
               brightness_step_pct: -5
               transition: 0
 
-      # Toggle ceiling lights on
+      # Toggle ceiling lights
       - conditions:
           - "{{ command == 'on_double_press' }}"
         sequence:
           - service: homeassistant.toggle
             target: !input ceiling_light
-            data: {}
 
-      # Turn everything off
+      # Turn bedside lamp off
       - conditions:
           - "{{ command == 'off_press' }}"
         sequence:
           - service: homeassistant.turn_off
             target: !input bedside_lamp
-            data: {}
+
+      # Turn everything off
+      - conditions:
+          - "{{ command == 'off_double_press' }}"
+        sequence:
+          - service: homeassistant.turn_off
+            target: !input bedside_lamp
           - service: homeassistant.turn_off
             target: !input other_lights
-            data: {}
           - service: homeassistant.turn_off
             target: !input ceiling_light
-            data: {}
