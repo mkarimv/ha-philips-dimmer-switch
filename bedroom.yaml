@@ -1,6 +1,6 @@
 blueprint:
-  name: "Philips Hue Dimmer Switch v13"
-  description: "Control a dimmable light with a Philips Hue Dimmer Switch."
+  name: "Philips Hue Dimmer Switch: Bedroom v13"
+  description: "Control a bedside lamp, a ceiling light, and turn off other lights in the bedroom with the Philips Hue Dimmer Switch."
   domain: automation
   input:
     remote:
@@ -43,17 +43,19 @@ trigger:
     event_data:
       device_id: !input remote
 action:
+  # https://www.home-assistant.io/docs/scripts/#variables
+  # https://www.home-assistant.io/docs/blueprint/schema/#blueprint-inputs-in-templates
   - variables:
       command: "{{ trigger.event.data.command }}"
+      # bedside_lamp.device_id
       bedside_lamp: !input bedside_lamp
   - choose:
       # Toggle on/off
       - conditions:
           - "{{ command == 'on_press' }}"
         sequence:
-          - service: light.toggle
+          - action: light.toggle
             target: !input bedside_lamp
-            data: {}
 
       # Turn on to minimum brightness
       - conditions:
