@@ -1,5 +1,5 @@
 blueprint:
-  name: "Philips Hue Dimmer Switch: Bedroom v14"
+  name: "Philips Hue Dimmer Switch: Bedroom v15"
   description: "Control a bedside lamp, a ceiling light, and turn off other lights in the bedroom with the Philips Hue Dimmer Switch."
   domain: automation
   input:
@@ -116,6 +116,8 @@ action:
         sequence:
           - service: homeassistant.turn_off
             target: !input bedside_lamp
+            data:
+              transition: 0
 
       # Turn everything off
       - conditions:
@@ -123,7 +125,13 @@ action:
         sequence:
           - service: homeassistant.turn_off
             target: !input bedside_lamp
+            data:
+              transition: 0
           - service: homeassistant.turn_off
             target: !input other_lights
+            data:
+              transition: 0
           - service: homeassistant.turn_off
             target: !input ceiling_light
+            data:
+              transition: 0
