@@ -1,5 +1,5 @@
 blueprint:
-  name: "Philips Hue Dimmer Switch v12"
+  name: "Philips Hue Dimmer Switch v13"
   description: "Control a dimmable light with a Philips Hue Dimmer Switch."
   domain: automation
   input:
@@ -45,6 +45,7 @@ trigger:
 action:
   - variables:
       command: "{{ trigger.event.data.command }}"
+      bedside_lamp: !input bedside_lamp
   - choose:
       # Toggle on/off
       - conditions:
