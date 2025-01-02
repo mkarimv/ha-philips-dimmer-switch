@@ -1,5 +1,5 @@
 blueprint:
-  name: "Philips Hue Dimmer Switch: Bedroom v15"
+  name: "Philips Hue Dimmer Switch: Bedroom v16"
   description: "Control a bedside lamp, a ceiling light, and turn off other lights in the bedroom with the Philips Hue Dimmer Switch."
   domain: automation
   input:
@@ -34,7 +34,7 @@ blueprint:
         target:
           entity:
             - integration: zha
-  source_url: https://github.com/urbas/ha-philips-dimmer-switch/blob/master/ha-philips-dimmer-switch-blueprint.yaml
+  source_url: https://github.com/urbas/ha-philips-dimmer-switch/blob/master/bedroom.yaml
 mode: restart
 max_exceeded: silent
 trigger:
@@ -56,6 +56,9 @@ action:
         sequence:
           - action: light.turn_on
             target: !input bedside_lamp
+            data:
+              brightness_pct: 100
+              transition: 1
 
       # turn bedside lamp on to minimum brightness
       - conditions:
@@ -67,7 +70,7 @@ action:
               brightness_pct: 1
               transition: 1
 
-      #  bedside lamp brightness up
+      # bedside lamp brightness up
       - conditions:
           - "{{ command == 'up_hold' }}"
         sequence:
@@ -103,14 +106,14 @@ action:
               brightness_step_pct: -5
               transition: 0
 
-      # Toggle ceiling lights
+      # toggle ceiling lights
       - conditions:
           - "{{ command == 'on_double_press' }}"
         sequence:
           - service: homeassistant.toggle
             target: !input ceiling_light
 
-      # Turn bedside lamp off
+      # turn bedside lamp off
       - conditions:
           - "{{ command == 'off_press' }}"
         sequence:
@@ -119,7 +122,7 @@ action:
             data:
               transition: 0
 
-      # Turn everything off
+      # turn everything off
       - conditions:
           - "{{ command == 'off_double_press' }}"
         sequence:
