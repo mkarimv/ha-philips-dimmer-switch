@@ -10,7 +10,7 @@ blueprint:
           filter:
             - integration: "zha"
               manufacturer: "Signify Netherlands B.V."
-              model: "RWL022"
+              model: "RWL021"
           multiple: false
     bulb:
       name: Bulb
