@@ -22,7 +22,6 @@ blueprint:
         target:
           entity:
             domain: all
-            
 mode: restart
 max_exceeded: silent
 trigger:
