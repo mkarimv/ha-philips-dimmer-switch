@@ -2,6 +2,7 @@ blueprint:
   name: "Philips Hue Dimmer Switch: Dimmable Bulb v1"
   description: "Control a single dimmable bulb."
   domain: automation
+  source_url: https://github.com/mkarimv/ha-philips-dimmer-switch/edit/master/dimmable-bulb.yaml
   input:
     remote:
       name: Philips Hue Dimmer Switch
@@ -14,15 +15,14 @@ blueprint:
             domain: sensor
             device_class: battery
           multiple: false
-    bulb:
-      name: Bulb
-      description: The bulb to control with the dimmer switch.
+   lights:
+      name: Lights
+      description: All lights or only one in the room
       selector:
         target:
           entity:
-            - domain:
-                - light
-  source_url: https://github.com/mkarimv/ha-philips-dimmer-switch/edit/master/dimmable-bulb.yaml
+            domain: all
+            
 mode: restart
 max_exceeded: silent
 trigger:
@@ -36,14 +36,14 @@ action:
   - variables:
       command: "{{ trigger.event.data.command }}"
       # bulb.device_id
-      bulb: !input bulb
+      bulb: !input lights
   - choose:
       # turn bulb on
       - conditions:
           - "{{ command == 'on_press' }}"
         sequence:
           - action: light.turn_on
-            target: !input bulb
+            target: !input lights
             data:
               brightness_pct: 100
               transition: 1
@@ -53,7 +53,7 @@ action:
           - "{{ command == 'on_hold' }}"
         sequence:
           - service: light.turn_on
-            target: !input bulb
+            target: !input lights
             data:
               brightness_pct: 1
               transition: 1
@@ -63,7 +63,7 @@ action:
           - "{{ command == 'up_hold' }}"
         sequence:
           - service: light.turn_on
-            target: !input bulb
+            target: !input lights
             data:
               brightness_step_pct: 20
               transition: 1
@@ -71,7 +71,7 @@ action:
           - "{{ command == 'up_short_release' }}"
         sequence:
           - service: light.turn_on
-            target: !input bulb
+            target: !input lights
             data:
               brightness_step_pct: 5
               transition: 0
@@ -81,7 +81,7 @@ action:
           - "{{ command == 'down_hold' }}"
         sequence:
           - service: light.turn_on
-            target: !input bulb
+            target: !input lights
             data:
               brightness_step_pct: -20
               transition: 1
@@ -89,7 +89,7 @@ action:
           - "{{ command == 'down_short_release' }}"
         sequence:
           - service: light.turn_on
-            target: !input bulb
+            target: !input lights
             data:
               brightness_step_pct: -5
               transition: 0
@@ -99,6 +99,6 @@ action:
           - "{{ command == 'off_press' }}"
         sequence:
           - service: homeassistant.turn_off
-            target: !input bulb
+            target: !input lights
             data:
               transition: 0
