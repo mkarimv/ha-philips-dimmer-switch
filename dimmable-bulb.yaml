@@ -4,13 +4,15 @@ blueprint:
   domain: automation
   input:
     remote:
-      name: "Philips Hue Dimmer Switch"
+      name: Philips Hue Dimmer Switch
+      description: Pick either RWL020 (US) or RWL021 (EU)
       selector:
         device:
-          filter:
-            - integration: "zha"
-              manufacturer: "Signify Netherlands B.V."
-              model: "RWL021"
+          integration: zha
+          manufacturer: Philips
+          entity:
+            domain: sensor
+            device_class: battery
           multiple: false
     bulb:
       name: Bulb
@@ -20,7 +22,7 @@ blueprint:
           entity:
             - domain:
                 - light
-  source_url: https://github.com/urbas/ha-philips-dimmer-switch/blob/master/dimmable-bulb.yaml
+  source_url: https://github.com/mkarimv/ha-philips-dimmer-switch/edit/master/dimmable-bulb.yaml
 mode: restart
 max_exceeded: silent
 trigger:
