@@ -15,7 +15,7 @@ blueprint:
             domain: sensor
             device_class: battery
           multiple: false
-   lights:
+    lights:
       name: lights
       description: The light(s) to control
       selector:
