@@ -2,7 +2,7 @@ blueprint:
   name: "Philips Hue Dimmer Switch: Dimmable Bulb v1"
   description: "Control a single dimmable bulb."
   domain: automation
-  source_url: https://github.com/mkarimv/ha-philips-dimmer-switch/edit/master/dimmable-bulb.yaml
+  source_url: https://github.com/mkarimv/ha-philips-dimmer-switch/blob/master/dimmable-bulb.yaml
   input:
     remote:
       name: Philips Hue Dimmer Switch
